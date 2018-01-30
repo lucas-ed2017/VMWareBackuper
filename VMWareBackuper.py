@@ -4,8 +4,9 @@
 import VirtualMachine, FTPServer    #Outras classes necessaria
 from os import system   #classe que manipula a linha de comando
 import sys
+from datetime import datetime #será usado para colocar a data do backup
 
-class VMWAreBackuper:    #inicio da classe
+class VMwareBackuper:    #inicio da classe
 
     def __init__(self, ftp): #construtor
         self.VMlist = [] #atributo que conter o nome de todas as VMs
@@ -31,14 +32,16 @@ class VMWAreBackuper:    #inicio da classe
                         vm.turnOff()
                         #ftp = FTPServer.FTPServer('192.168.163.130', 'ftp', 'l25081999')    #conexão ao servidor FTP
                         print("Packing VM " + vmname + " and sending it to server " + self.ftp.address)
-                        self.ftp.sendFile(vmname) #Enviar uma copia da pasta da vm compactada para o servidor
+                        packager = Packager('/vmfs/volumes/datastore1/' + vmname, vmname  + '_backup_vmwarebackuper_' + str(datetime.now()) + '.tar') #preparar empacotador
+                        packager.compress() #empacotar maquina virtual
+                        self.ftp.sendFile(vmname + '.tar') #Enviar uma copia da pasta da vm compactada para o servidor
                         print("Success! Turning VM " + vmname + " on")
                         vm.turnOn()
             except:
                     print("Unexpected error: ", sys.exc_info()[0])
 
 ftp = FTPServer.FTPServer("000.000.000.000", "user", "pass", "/")
-v = VMWAreBackuper(ftp)
+v = VMwareBackuper(ftp)
 v.backupVM('VMName')
 
 

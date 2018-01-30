@@ -1,8 +1,8 @@
 #!/bin/python
 # -*- coding: utf-8 -*-
 import ftplib #biblioteca FTP
+import Packager
 from os import system		 #comando system permite dar comandos pelo terminal
-from datetime import datetime #será usado para colocar a data do backup
 
 class FTPServer(object):	#inicio da classe
 	
@@ -25,9 +25,9 @@ class FTPServer(object):	#inicio da classe
 
 	def sendFile(self, file):	#compactar e enviar a maquina compactada
                 try:
-                        system('tar -cf ' + file + '.tar /vmfs/volumes/datastore1/' + file)
-                        self.ftp.storbinary('STOR ' + file + '_backup_vmwarebackuper_' + str(datetime.now()) + '.tar', open(file + '.tar', 'rb'))
-                        system('rm -r ' + file + '.tar')	#remover a copia agora inutil
+#                        system('tar -cf ' + file + '.tar /vmfs/volumes/datastore1/' + file)
+                        self.ftp.storbinary('STOR ' + file, open(file, 'rb'))
+                        system('rm -r ' + file)	#remover a copia agora inutil
                 except ftplib.all_errors as e:
                         print(e)
                         raise
