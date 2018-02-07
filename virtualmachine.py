@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from os import system	#comando system permite dar comandos pelo terminal
 
-class VirtualMachine(object):	#inicio da classe
+class virtualmachine(object):	#inicio da classe
     def __init__(self, name):	#construtor
         self.name = name		#atributo nome
         system('vim-cmd vmsvc/getallvms or vim-cmd vmsvc/getallvms |grep {} > vminfo.txt'.format(self.name))	#gerar arquivo de texto com informações da maquina
@@ -29,31 +29,32 @@ class VirtualMachine(object):	#inicio da classe
             print(e)
         
 
-    def turnOn(self):
+    def turnon(self):
         system('vim-cmd vmsvc/power.on {}'.format(self.vmid))	#ligar maquina
         self.on = True
 
                 
 
-    def turnOff(self):
+    def turnoff(self):
     	system('vim-cmd vmsvc/power.off {}'.format(self.vmid))	#desligar maquina
     	sleep(15)
     	result = status()
-    	if result == False:
+    	if not result:
             self.on = False
         else:
             attempts = 0
-            while attempts < 3 or machine == True:
+            while attempts < 3: #esta repetição verificara se a maquina virtual realmente desligou
                 self.on = True
-                system('vim-cmd vmsvc/power.off {}'.format(self.vmid))
                 sleep(5)
-                machine = status()
-                attempts += 1
+                if self.status():
+                    attempts += 1 #se ainda nao desligou, teste novamente
+                else:
+                    self.on = False #se ela ja desligou, continue com o codigo
+                    break
                 
-            if attempts == 3:
-                print('Error! it was not possible to turn off the virtual machine')
+            if attempts == 3: #se houve 3 tentativas e a VM nao desligou, gere uma exceção
                 self.on = True
-                raise
+                raise Exception("Error! 30s timeout reached and VM didn't turn off.")
                 
 
     def status(self):

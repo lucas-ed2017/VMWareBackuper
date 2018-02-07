@@ -1,10 +1,9 @@
 #!/bin/python
 # -*- coding: utf-8 -*-
 import ftplib #biblioteca FTP
-import Packager
 from os import system		 #comando system permite dar comandos pelo terminal
 
-class FTPServer(object):	#inicio da classe
+class ftpserver(object):	#inicio da classe
 	
 	def __init__(self, address, user, password, baseDir):	#construtor
 		self.address = address	#metodos
@@ -23,16 +22,16 @@ class FTPServer(object):	#inicio da classe
 			print(e)
 			raise
 
-	def sendFile(self, file):	#compactar e enviar a maquina compactada
+	def sendfile(self, file):	#compactar e enviar a maquina compactada
                 try:
-#                        system('tar -cf ' + file + '.tar /vmfs/volumes/datastore1/' + file)
+#                       system('tar -cf ' + file + '.tar /vmfs/volumes/datastore1/' + file)
                         self.ftp.storbinary('STOR ' + file, open(file, 'rb'))
                         system('rm -r ' + file)	#remover a copia agora inutil
                 except ftplib.all_errors as e:
                         print(e)
                         raise
 
-	def downloadFile(self, file):
+	def downloadfile(self, file):
 		self.ftp.retrbinary('RETR ' + file, open(file, 'wb').write())	#baixar um sistema requisitado
 
 	#OBS: falta definir o diretorio da função acima

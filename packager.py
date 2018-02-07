@@ -1,6 +1,6 @@
 from os import system
 
-class Packager(object):
+class packager(object):
 
 	def __init__(self, fileToCompress, destFile):
 		self.fileToCompress = fileToCompress
