@@ -37,6 +37,31 @@ class VirtualMachine(object):	#inicio da classe
 
     def turnOff(self):
     	system('vim-cmd vmsvc/power.off {}'.format(self.vmid))	#desligar maquina
-    	self.off = False
+    	sleep(15)
+    	result = status()
+    	if result == False:
+            self.on = False
+        else:
+            attempts = 0
+            while attempts < 3 or machine == True:
+                self.on = True
+                system('vim-cmd vmsvc/power.off {}'.format(self.vmid))
+                sleep(5)
+                machine = status()
+                attempts += 1
+                
+            if attempts == 3:
+                print('Error! it was not possible to turn off the virtual machine')
+                self.on = True
+                raise
+                
+
+    def status(self):
+        system('vim-cmd vmsvc/power.getstate {} > vmstate.txt'.format(self.vmid))
+        with open('vmstate.txt') as vmstate:
+            if vmstate.readlines()[1] == 'Powered on':
+                return True
+            else:
+                return False
 
     #OBS: Falta o retorno do diretorio
