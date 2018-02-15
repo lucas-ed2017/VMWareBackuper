@@ -8,7 +8,7 @@ class packager(object):
 
 	def compress(self):
 		try:
-			system("tar -cf " + self.destFile + " " + self.fileToCompress)
+			system("tar -cf " + self.destFile + ".tar " + self.fileToCompress)
 		except Exception as e:
 			print(e)
 			raise

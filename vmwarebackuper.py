@@ -28,15 +28,22 @@ class vmwarebackuper:    #inicio da classe
                 if name == vmname:    #maquina encontrada
                         print("Virtual Machine " + vmname + " found")
                         vm = virtualmachine.virtualmachine(vmname)  #objeto maquina virtual
-                        print("Turning VM " + vmname + " off.")
-                        vm.turnoff()
+                        print("Turning VM " + vmname + " off.") #aviso de maquina está sendo desligada
+                        vm.turnoff()    #metodo desligar maquina
                         print("Packing VM " + vmname + " and sending it to server " + self.ftp.address)
-                        packer = packager('/vmfs/volumes/datastore1/' + vmname, vmname  + '_backup_vmwarebackuper_' + str(datetime.now()) + '.tar') #preparar empacotador
+                        finalfile = str(vmname  + '_B_' + str(datetime.now()) + '.tar')
+                        print(finalfile)
+                        packer = packager.packager(str('/vmfs/volumes/datastore1/' + vmname), finalfile) #preparar empacotador
                         packer.compress() #empacotar maquina virtual
-                        self.ftp.sendFile(vmname + '.tar') #Enviar uma copia da pasta da vm compactada para o servidor
+                        self.ftp.sendfile(finalfile) #Enviar uma copia da pasta da vm compactada para o servidor
                         print("Success! Turning VM " + vmname + " on")
                         vm.turnon()
             except:
                     print("Unexpected error: ", sys.exc_info()[0])
+                    
+ftp = ftpserver.ftpserver('192.168.163.130', 'ftp', 'l25081999', '/home/ftp')
+v = vmwarebackuper(ftp)
+v.backupvm('windows')
+
 
 
