@@ -31,62 +31,62 @@ class virtualmachine(object):	#inicio da classe
         
 
     def turnon(self):
-        #verify = status()
-        #if verify == True:
-        #    print("The virtual machine it's already turn on")
-        #else:
-        system('vim-cmd vmsvc/power.on {}'.format(self.vmid))	#ligar maquina
-        sleep(15)
+        verify = status()
+        if verify == True:
+            print("The virtual machine it's already turn on")
+        else:
+            system('vim-cmd vmsvc/power.on {}'.format(self.vmid))	#ligar maquina
+            sleep(15)
 
             #verificar se a máquina já foi de fato ligada
-            #result = status()
-            #if result:
-            #    self.on = True
+            result = status()
+            if result:
+                self.on = True
 
-            #else:
-            #    attempts = 0
-            #    while attempts < 3: #esta repetição verificara se a maquina virtual realmente ligou
-            #        self.on = False
-            #        sleep(5)
-            #        if not self.status():
-            #            attempts += 1 #se ainda nao ligou, teste novamente
-            #        else:
-            #            self.on = True #se ela ja ligou, continue com o codigo
-            #            break
+            else:
+                attempts = 0
+                while attempts < 3: #esta repetição verificara se a maquina virtual realmente ligou
+                    self.on = False
+                    sleep(5)
+                    if not self.status():
+                        attempts += 1 #se ainda nao ligou, teste novamente
+                    else:
+                        self.on = True #se ela ja ligou, continue com o codigo
+                        break
 
-            #        if attempts == 3: #se houve 3 tentativas e a VM nao ligou, gere uma exceção
-            #            self.on = True
-            #        raise Exception("Error! 30s timeout reached and VM didn't turn on.")
+                    if attempts == 3: #se houve 3 tentativas e a VM nao ligou, gere uma exceção
+                        self.on = True
+                    raise Exception("Error! 30s timeout reached and VM didn't turn on.")
 
     def turnoff(self):
-        #verify = status()
-        #if verify == False:
-        #    print("The virtual machine it's already turn off")
+        verify = status()
+        if verify == False:
+            print("The virtual machine it's already turn off")
 
-        #else:
-        system('vim-cmd vmsvc/power.off {}'.format(self.vmid))	#desligar maquina
-        sleep(15)
+        else:
+            system('vim-cmd vmsvc/power.off {}'.format(self.vmid))	#desligar maquina
+            sleep(15)
             
 
             #verificar se a máquina já foi de fato desligada
-            #result = status()
-            #if not result:
-            #    self.on = False
+            result = status()
+            if not result:
+                self.on = False
                 
-            #else:
-            #    attempts = 0
-            #    while attempts < 3: #esta repetição verificara se a maquina virtual realmente desligou
-            #        self.on = True
-            #        sleep(5)
-            #        if self.status():
-            #            attempts += 1 #se ainda nao desligou, teste novamente
-            #        else:
-            #            self.on = False #se ela ja desligou, continue com o codigo
-            #            break
-            #        
-            #    if attempts == 3: #se houve 3 tentativas e a VM nao desligou, gere uma exceção
-            #        self.on = True
-            #        raise Exception("Error! 30s timeout reached and VM didn't turn off.")
+            else:
+                attempts = 0
+                while attempts < 3: #esta repetição verificara se a maquina virtual realmente desligou
+                    self.on = True
+                    sleep(5)
+                    if self.status():
+                        attempts += 1 #se ainda nao desligou, teste novamente
+                    else:
+                        self.on = False #se ela ja desligou, continue com o codigo
+                        break
+                    
+                if attempts == 3: #se houve 3 tentativas e a VM nao desligou, gere uma exceção
+                    self.on = True
+                    raise Exception("Error! 30s timeout reached and VM didn't turn off.")
                 
 
     def status(self):
