@@ -41,9 +41,4 @@ class vmwarebackuper:    #inicio da classe
             except:
                     print("Unexpected error: ", sys.exc_info()[0])
                     
-ftp = ftpserver.ftpserver('192.168.163.130', 'ftp', 'l25081999', '/home/ftp')
-v = vmwarebackuper(ftp)
-v.backupvm('windows')
-
-
 
