@@ -25,7 +25,7 @@ class ftpserver(object):	#inicio da classe
 	def sendfile(self, file):	#compactar e enviar a maquina compactada
                 try:
 #                       system('tar -cf ' + file + '.tar /vmfs/volumes/datastore1/' + file)
-                        self.ftp.storbinary('STOR ' + file, open(file, 'rb'))
+                        self.ftp.storbinary("STOR \"" + file"\"", open(file, 'rb'))
                         system('rm -r ' + file)	#remover a copia agora inutil
                 except ftplib.all_errors as e:
                         print(e)
