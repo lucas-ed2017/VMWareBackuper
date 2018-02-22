@@ -9,8 +9,7 @@ class virtualmachine(object):	#inicio da classe
         system('vim-cmd vmsvc/getallvms or vim-cmd vmsvc/getallvms |grep {} > vminfo.txt'.format(self.name))	#gerar arquivo de texto com informações da maquina
         try:
             with open('vminfo.txt') as vmtext:	#abrir arquivo de texto anteriormente gerado
-                self.vmid = vmtext.readline()[0:2].strip()	#obter o id e apagar espaços inuteis
-            system('vim-cmd vmsvc/power.getstate {} > vmstate.txt'.format(self.vmid))	#gerar arquivo de texto sobre o atual estado da maquina
+                self.vmid = vmtext.readline()[0:2].strip()	#obter o id e apagar espaços inuteis 
             system('rm -r vminfo.txt') #apagar arquivos de textos agora inuteis
         except Exception as e:
             print(e)
@@ -55,7 +54,8 @@ class virtualmachine(object):	#inicio da classe
 
                     if attempts == 3: #se houve 3 tentativas e a VM nao ligou, gere uma exceção
                         self.on = False
-                        raise Exception("Error! 30s timeout reached and VM didn't turn on.")
+                        print("Error! 30s timeout reached and VM didn't turn on.")
+                        raise Exception
 
     def turnoff(self):
         
@@ -85,7 +85,7 @@ class virtualmachine(object):	#inicio da classe
                     
                     if attempts == 3: #se houve 3 tentativas e a VM nao desligou, gere uma exceção
                         self.on = True
-                        raise Exception("Error! 30s timeout reached and VM didn't turn off.")
+                        print("Error! 30s timeout reached and VM didn't turn off.")
+                        raise Exception
                 
 
-    #OBS: Falta o retorno do diretorio
