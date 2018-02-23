@@ -1,0 +1,8 @@
+VMWareBackuper/
+	setup.py
+	vmwarebackuper/
+		vmwarebackuper.py
+		virtualmachine.py
+		packager.py
+		ftpserver.py
+		__init__.py
