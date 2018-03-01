@@ -23,24 +23,27 @@ class vmwarebackuper:    #inicio da classe
             print(e)
 
     def backupvm(self, vmname):     #fazer backup de uma maquina especifica
-        for name in self.vmlist:   #procurar maquina desejada
-            try:
-                if name == vmname:    #maquina encontrada
-                    print("Virtual Machine " + vmname + " found")
-                    vm = virtualmachine.virtualmachine(vmname)  #objeto maquina virtual
-                    print("Turning VM " + vmname + " off.") #aviso de maquina está sendo desligada
-                    vm.turnoff()    #metodo desligar maquina
-                    print("Packing VM " + vmname + " and sending it to server " + self.ftp.address)
-                    finalfile = vmname  + '_vmwarebackuper_' + str(datetime.now())
-                    packer = packager.packager('/vmfs/volumes/datastore1/' + vmname, finalfile) #preparar empacotador
-                    packer.compress() #empacotar maquina virtual
-                    self.ftp.sendfile(finalfile + ".tar") #Enviar uma copia da pasta da vm compactada para o servidor
-                    print("Success! Turning VM " + vmname + " on")
-                    vm.turnon()
-            except:
+        try:
+            if vmname in self.vmlist:    #maquina encontrada
+                print("Virtual Machine " + vmname + " found")
+                vm = virtualmachine.virtualmachine(vmname)  #objeto maquina virtual
+                print("Turning VM " + vmname + " off.") #aviso de maquina está sendo desligada
+                vm.turnoff()    #metodo desligar maquina
+                print("Packing VM " + vmname + " and sending it to server " + self.ftp.address)
+                finalfile = vmname  + '_vmwarebackuper_' + str(datetime.now())
+                packer = packager.packager('/vmfs/volumes/datastore1/' + vmname, finalfile) #preparar empacotador
+                packer.compress() #empacotar maquina virtual
+                finalfile = finalfile + ".tar"
+                self.ftp.sendfile(finalfile) #Enviar uma copia da pasta da vm compactada para o servidor
+                system('rm -r \'' + finalfile + '\'') #remover a copia agora inutil
+                print("Success! Turning VM " + vmname + " on")
+                vm.turnon()
                 self.ftp.end()
-                print("Unexpected error: ", sys.exc_info()[0])
-        self.ftp.end()
+            else:
+                print("Virtual Machine " + vmname + " not found.")
+        except:
+            print("Unexpected error: ", sys.exc_info()[0])
+            self.ftp.end()
 
     def backupallvms(self):
         for name in self.vmlist:

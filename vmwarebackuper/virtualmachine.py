@@ -60,7 +60,7 @@ class virtualmachine(object):	#inicio da classe
     def turnoff(self):
         
         if self.status() == False:
-            print("The virtual machine it's already turn off")
+            print("The virtual machine is already turned off.")
 
         else:
             system('vim-cmd vmsvc/power.off {}'.format(self.vmid))	#desligar maquina
