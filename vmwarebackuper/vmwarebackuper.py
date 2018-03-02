@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 try:
-    	from setuptools import setup, find_packages
+        from setuptools import setup, find_packages
 except ImportError:
-    	from distutils.core import setup, find_packages
-	import vmwarebackuper.virtualmachine, vmwarebackuper.ftpserver, vmwarebackuper.packager    #Outras classes necessarias
+        from distutils.core import setup, find_packages
+        import vmwarebackuper.virtualmachine, vmwarebackuper.ftpserver, vmwarebackuper.packager    #Outras classes necessarias
 from os import system   #classe que manipula a linha de comando
 import sys
 from datetime import datetime #será usado para colocar a data do backup
@@ -67,6 +67,8 @@ class vmwarebackuper:    #inicio da classe
                 print("Unexpected error: ", sys.exc_info()[0])
         self.ftp.end()
 
+    def getallvms(self):
+            return self.vmlist
 
                     
 
