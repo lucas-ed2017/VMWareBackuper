@@ -1,7 +1,11 @@
 #!/bin/python
 # -*- coding: utf-8 -*-
 
-import virtualmachine, ftpserver, packager    #Outras classes necessarias
+try:
+    	from setuptools import setup, find_packages
+except ImportError:
+    	from distutils.core import setup, find_packages
+	import vmwarebackuper.virtualmachine, vmwarebackuper.ftpserver, vmwarebackuper.packager    #Outras classes necessarias
 from os import system   #classe que manipula a linha de comando
 import sys
 from datetime import datetime #será usado para colocar a data do backup
