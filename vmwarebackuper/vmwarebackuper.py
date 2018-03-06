@@ -42,12 +42,10 @@ class vmwarebackuper:    #inicio da classe
                 system('rm -r \'' + finalfile + '\'') #remover a copia agora inutil
                 print("Success! Turning VM " + vmname + " on")
                 vm.turnon()
-                self.ftp.end()
             else:
                 print("Virtual Machine " + vmname + " not found.")
         except:
             print("Unexpected error: ", sys.exc_info()[0])
-            self.ftp.end()
 
     def backupallvms(self):
         for name in self.vmlist:
@@ -63,9 +61,7 @@ class vmwarebackuper:    #inicio da classe
                 print("Success! Turning VM " + name + " on")
                 vm.turnon()
             except:
-                self.ftp.end()
                 print("Unexpected error: ", sys.exc_info()[0])
-        self.ftp.end()
 
     def getallvms(self):
             return self.vmlist
