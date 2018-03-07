@@ -33,38 +33,28 @@ class vmwarebackuper:    #inicio da classe
                 vm = virtualmachine.virtualmachine(vmname)  #objeto maquina virtual
                 print("Turning VM " + vmname + " off.") #aviso de maquina está sendo desligada
                 vm.turnoff()    #metodo desligar maquina
-                print("Packing VM " + vmname + " and sending it to server " + self.ftp.address)
+                print("Packing VM " + vmname)
                 finalfile = vmname  + '_vmwarebackuper_' + str(datetime.now())
                 packer = packager.packager('/vmfs/volumes/datastore1/' + vmname, finalfile) #preparar empacotador
                 packer.compress() #empacotar maquina virtual
                 finalfile = finalfile + ".tar"
+                print("Sending " + vmname + " to server " + self.ftp.address)
                 self.ftp.sendfile(finalfile) #Enviar uma copia da pasta da vm compactada para o servidor
                 system('rm -r \'' + finalfile + '\'') #remover a copia agora inutil
                 print("Success! Turning VM " + vmname + " on")
                 vm.turnon()
             else:
                 print("Virtual Machine " + vmname + " not found.")
-        except:
+        except Exception as e:
             print("Unexpected error: ", sys.exc_info()[0])
+            print(e)
 
     def backupallvms(self):
-        for name in self.vmlist:
-            try:
-                vm = virtualmachine.virtualmachine(name)  #objeto maquina virtual
-                print("Turning VM " + name + " off.") #aviso de maquina está sendo desligada
-                vm.turnoff()    #metodo desligar maquina
-                print("Packing VM " + name + " and sending it to server " + self.ftp.address)
-                finalfile = name  + '_vmwarebackuper_' + str(datetime.now())
-                packer = packager.packager('/vmfs/volumes/datastore1/' + name, finalfile) #preparar empacotador
-                packer.compress() #empacotar maquina virtual
-                self.ftp.sendfile(finalfile + ".tar") #Enviar uma copia da pasta da vm compactada para o servidor
-                print("Success! Turning VM " + name + " on")
-                vm.turnon()
-            except:
-                print("Unexpected error: ", sys.exc_info()[0])
+        for vmname in self.vmlist:
+                self.backupvm(vmname)
 
-    def getallvms(self):
-            return self.vmlist
+        def getallvms(self):
+                return self.vmlist
 
                     
 

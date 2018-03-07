@@ -16,7 +16,7 @@ class ftpserver(object):	#inicio da classe
                 try:
                         self.connect()
                         self.ftp.storbinary("STOR " + file, open(file, 'rb'))
-                        self.ftp.end()
+                        self.end()
                 except ftplib.all_errors as e:
                         print(e)
                         self.end()
@@ -26,7 +26,7 @@ class ftpserver(object):	#inicio da classe
 	def downloadfile(self, file):
                 self.connect()
 		self.ftp.retrbinary('RETR ' + file, open(file, 'wb').write())	#baixar um sistema requisitado
-		self.ftp.end()
+		self.end()
 
 	def connect(self):
                 try:	#tentar estabelecer conexão FTP
