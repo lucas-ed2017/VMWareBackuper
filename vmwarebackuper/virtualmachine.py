@@ -63,7 +63,7 @@ class virtualmachine(object):	#inicio da classe
             print("The virtual machine is already turned off.")
 
         else:
-            system('vim-cmd vmsvc/power.off {}'.format(self.vmid))	#desligar maquina
+            system('vim-cmd vmsvc/power.shutdown {}'.format(self.vmid))	#desligar maquina
             sleep(15)
             
 
