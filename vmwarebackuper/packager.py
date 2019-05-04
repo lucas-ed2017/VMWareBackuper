@@ -1,14 +1,22 @@
-from os import system
+#!/bin/python
+# -*- coding: utf-8 -*-
 
-class packager(object):
+import shutil
+from os import stat
+import progressbar
 
-	def __init__(self, fileToCompress, destFile):
-		self.fileToCompress = fileToCompress
-		self.destFile = destFile
-
-	def compress(self):
-		try:
-			system("tar -cvf \"" + self.destFile + ".tar\" \"" + self.fileToCompress + "\"")
-		except Exception as e:
-			print(e)
-			raise
+class packager:
+    def __init__(self, path, finalfile):
+        self.path = path
+        self.finalfile = finalfile
+        
+    def compress(self):
+        total = stat(self.path).st_size
+        bar = progressbar.progressbar(0, total)
+        cb = create_callback(bar, total)
+        shutil.make_archive(self.path, 'tar.gz', self.finalfile, callback=cb)
+        
+        def create_callback(progressbar, total):  # os underlines no nome da funcao tornam ela 'private', o que dificulta a utilizacao em outras classes
+            def cb(data):
+                progressbar.update_progress(len(data))
+            return cb

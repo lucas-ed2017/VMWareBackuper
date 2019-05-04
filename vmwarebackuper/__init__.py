@@ -1,3 +1,6 @@
+#!/bin/python
+# -*- coding: utf-8 -*-
+
 try:
     #importacao a la python3
     from vmwarebackuper.vmwarebackuper import vmwarebackuper

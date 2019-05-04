@@ -2,16 +2,15 @@
 # -*- coding: utf-8 -*-
 
 try:
-        import virtualmachine, ftpserver, packager
+    import virtualmachine, ftpserver, packager
 except ImportError:
-        import vmwarebackuper.virtualmachine, vmwarebackuper.ftpserver, vmwarebackuper.packager    #Outras classes necessarias
+    import vmwarebackuper.virtualmachine, vmwarebackuper.ftpserver, vmwarebackuper.packager    #Outras classes necessarias
 
 from os import system   #classe que manipula a linha de comando
 import sys
 from datetime import datetime #será usado para colocar a data do backup
 
 class vmwarebackuper:    #inicio da classe
-
     def __init__(self, ftp): #construtor
         self.vmlist = [] #atributo que conter o nome de todas as VMs
         self.ftp = ftp
@@ -23,8 +22,12 @@ class vmwarebackuper:    #inicio da classe
                     VMsNames = line.split()     #transformar a linha atual em indexs
                     self.vmlist.append(VMsNames[1].strip())  #pegar o index com o nome e jogar na lista de nomes de VMs tirando espaços inuteis
             system('rm -r allvms.txt')  #apagar arquivo de texto inutil anteriormente gerado
+        except IOError as i:
+            print(i)
+            print("Error! don't was possible search the VirtualMachines ")
         except Exception as e:
             print(e)
+            print("Error! don't was possible continue")
 
     def backupvm(self, vmname):     #fazer backup de uma maquina especifica
         try:
@@ -37,7 +40,7 @@ class vmwarebackuper:    #inicio da classe
                 finalfile = vmname  + '_vmwarebackuper_' + str(datetime.now())
                 packer = packager.packager('/vmfs/volumes/datastore1/' + vmname, finalfile) #preparar empacotador
                 packer.compress() #empacotar maquina virtual
-                finalfile = finalfile + ".tar"
+                finalfile = finalfile + ".tar.gz"
                 print("Sending " + vmname + " to server " + self.ftp.address)
                 self.ftp.sendfile(finalfile) #Enviar uma copia da pasta da vm compactada para o servidor
                 system('rm -r \'' + finalfile + '\'') #remover a copia agora inutil
@@ -51,12 +54,7 @@ class vmwarebackuper:    #inicio da classe
 
     def backupallvms(self):
         for vmname in self.vmlist:
-                self.backupvm(vmname)
+            self.backupvm(vmname)
 
-        def getallvms(self):
-                return self.vmlist
-
-                    
-
-
-
+    def getallvms(self):
+        return self.vmlist

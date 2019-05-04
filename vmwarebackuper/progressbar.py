@@ -1,3 +1,6 @@
+#!/bin/python
+# -*- coding: utf-8 -*-
+
 class progressbar:
 
     def __init__(self, progress, total, barlength = None):
@@ -11,7 +14,6 @@ class progressbar:
         except ImportError: #se a importacao de console der errado, usar 50 como tamanho padrao da barlength
             if barlength == None: #verifica se o tamanho da barlength eh o padrao
                 self.barlength = 50
-            
 
     def update_progress(self, progress):
         barLength = self.barlength
