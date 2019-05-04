@@ -1,22 +1,58 @@
 #!/bin/python
 # -*- coding: utf-8 -*-
 
-import shutil
-from os import stat
+import sys
+import os
+import tarfile
 import progressbar
 
 class packager:
-    def __init__(self, path, finalfile):
+    def __init__(self, src_folder, dest_folder, extension='.tar.gz', path='/vmfs/volumes/datastore1/', bar=True):
+        self.src_folder = src_folder
+        self.dest_folder = dest_folder
+        self.extension = extension
         self.path = path
-        self.finalfile = finalfile
+        self.bar = bar
         
     def compress(self):
-        total = stat(self.path).st_size
-        bar = progressbar.progressbar(0, total)
-        cb = create_callback(bar, total)
-        shutil.make_archive(self.path, 'tar.gz', self.finalfile, callback=cb)
-        
-        def create_callback(progressbar, total):  # os underlines no nome da funcao tornam ela 'private', o que dificulta a utilizacao em outras classes
-            def cb(data):
-                progressbar.update_progress(len(data))
-            return cb
+        if self.bar:
+            tar = mytarfile.open(self.dest_folder + self.extension, "w:gz", callback=callback)
+        else:
+            tar = mytarfile.open(self.dest_folder + self.extension, "w:gz", callback = None)
+        tar.add(self.path + self.src_folder)
+        tar.close()
+
+
+class fileproxy(object):
+    def __init__(self, fobj, callback):
+        self.fobj = fobj
+        self.callback = callback
+        self.size = os.fstat(self.fobj.fileno()).st_size
+
+    def read(self, size):
+        self.callback(self.fobj.tell(), self.size)
+        return self.fobj.read(size)
+
+    def close(self):
+        self.callback(self.size, self.size)
+        self.fobj.close()
+
+
+class mytarfile(tarfile.TarFile):
+
+    def __init__(self, *args, **kwargs):
+        self.callback = kwargs.pop("callback")
+        super(mytarfile, self).__init__(*args, **kwargs)
+
+    def addfile(self, tarinfo, fileobj=None):
+        if self.callback is not None and fileobj is not None:
+            fileobj = fileproxy(fileobj, self.callback)
+        super(mytarfile, self).addfile(tarinfo, fileobj)
+
+
+def callback(processed, total):
+    #sys.stderr.write("%.1f%% \r" % (processed / float(total) * 100))
+    bar = progressbar.progressbar(0, total)
+    bar.update_progress(processed)
+
+

@@ -10,7 +10,7 @@ from os import system   #classe que manipula a linha de comando
 import sys
 from datetime import datetime #será usado para colocar a data do backup
 
-class vmwarebackuper:    #inicio da classe
+class vmwarebackuper():    #inicio da classe
     def __init__(self, ftp): #construtor
         self.vmlist = [] #atributo que conter o nome de todas as VMs
         self.ftp = ftp
@@ -38,7 +38,7 @@ class vmwarebackuper:    #inicio da classe
                 vm.turnoff()    #metodo desligar maquina
                 print("Packing VM " + vmname)
                 finalfile = vmname  + '_vmwarebackuper_' + str(datetime.now())
-                packer = packager.packager('/vmfs/volumes/datastore1/' + vmname, finalfile) #preparar empacotador
+                packer = packager.packager(vmname, finalfile) #preparar empacotador
                 packer.compress() #empacotar maquina virtual
                 finalfile = finalfile + ".tar.gz"
                 print("Sending " + vmname + " to server " + self.ftp.address)
