@@ -1,6 +1,6 @@
 #!/bin/python
 # -*- coding: utf-8 -*-
-#Taken from: https://mail.python.org/pipermail/python-list/2010-July/581965.html
+#code from: https://mail.python.org/pipermail/python-list/2010-July/581965.html
 
 import sys
 import os
