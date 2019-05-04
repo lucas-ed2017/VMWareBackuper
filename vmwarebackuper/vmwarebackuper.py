@@ -11,9 +11,10 @@ import sys
 from datetime import datetime #será usado para colocar a data do backup
 
 class vmwarebackuper():    #inicio da classe
-    def __init__(self, ftp): #construtor
+    def __init__(self, ftp, extension='.tar.gz'): #construtor
         self.vmlist = [] #atributo que conter o nome de todas as VMs
         self.ftp = ftp
+        self.extension = extension
         system('vim-cmd vmsvc/getallvms or vim-cmd vmsvc/getallvms > allvms.txt')   #gerar texto com todas as Maquinas Virtuais
         try:
             with open('allvms.txt') as allvms:  #abrir arquivo de texto anteriormente gerado
@@ -40,7 +41,7 @@ class vmwarebackuper():    #inicio da classe
                 finalfile = vmname  + '_vmwarebackuper_' + str(datetime.now())
                 packer = packager.packager(vmname, finalfile) #preparar empacotador
                 packer.compress() #empacotar maquina virtual
-                finalfile = finalfile + ".tar.gz"
+                finalfile = finalfile + self.extension
                 print("Sending " + vmname + " to server " + self.ftp.address)
                 self.ftp.sendfile(finalfile) #Enviar uma copia da pasta da vm compactada para o servidor
                 system('rm -r \'' + finalfile + '\'') #remover a copia agora inutil
